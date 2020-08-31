@@ -1,0 +1,59 @@
+
+# Notes
+- Centos 8 https://wiki.centos.org/Cloud/AWS#Finding_AMI_ids
+- ssh key already imported in aws ec2 console
+- Default Security Group
+
+
+
+aws ec2 run-instances \
+    --dry-run \
+    --profile perso \
+    --no-ebs-optimized \
+    --image-id $AMI  \
+    --count 1 --instance-type t3.large \
+    --key-name $SSH_KEY_NAME \
+    --security-group-ids $DEFAULT_SG_ID \
+    --subnet-id $DEFAULT_SUBNET_ID  \
+    --region $REGION \
+    --monitoring Enabled=false \
+    --associate-public-ip-address \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=$HOSTNAME},{Key=Project,Value=salt}]' 'ResourceType=volume,Tags=[{Key=Name,Value=HOSTNAME},{Key=Project,Value=salt}]' \
+    --user-data file://aws_ec2_user_data_salt.yml
+
+# SALT COMMANDS
+
+#### List all minion up
+salt-run manage.up
+####  List all minion down 
+salt-run manage.down
+
+####  List all minion with status
+salt-run manage.status
+
+####  Ping on single minion
+salt k9-poc-salt-01 test.ping
+
+####  Collect the disk space for all minion
+salt '*' disk.usage
+
+####  Collect the OS type/mame for all minion
+salt '*' cmd.run 'uname -a'
+
+####  Install on or many package
+master:~$ salt '*' pkg.install apache2
+master:~$ salt '*' pkg.install pkgs='["curl", "vim"]'
+
+####  Update OS and package
+master:~$ salt '*' pkg.list_upgrades
+master:~$ salt '*' pkg.upgrade
+master:~$ salt '*' pkg.refresh_db
+
+####  Collect the package version for htop on all minion
+master:~$ salt '*' pkg.version htop
+
+####  Restart a service
+master:~$ salt '*' service.restart nom_service;
+
+#### Create a empty file
+master:~$ salt '*' cmd.run "touch fichier.txt"
