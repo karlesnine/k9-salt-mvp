@@ -25,6 +25,7 @@ aws ec2 run-instances \
 
 #### List all minion up
 salt-run manage.up
+
 ####  List all minion down 
 salt-run manage.down
 
@@ -57,3 +58,9 @@ master:~$ salt '*' service.restart nom_service;
 
 #### Create a empty file
 master:~$ salt '*' cmd.run "touch fichier.txt"
+
+#### apply top / high state
+salt '*' state.highstate
+
+####  apply "common" state
+salt '*' state.apply common
