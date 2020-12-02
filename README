@@ -59,8 +59,17 @@ master:~$ salt '*' service.restart nom_service;
 #### Create a empty file
 master:~$ salt '*' cmd.run "touch fichier.txt"
 
-#### apply top / high state
+#### apply top  file / high state
 salt '*' state.highstate
 
 ####  apply "common" state
 salt '*' state.apply common
+
+###
+salt '*' state.apply --state-output=mixed
+
+###
+salt '*' state.apply --state-output=mixed test=True
+
+###
+salt 'minion2' state.apply examples pillar='{"ftpusername": "test", "ftppassword": "0ydyfww3giq8"}'
